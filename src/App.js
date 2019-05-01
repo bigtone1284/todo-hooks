@@ -1,28 +1,31 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import TodosContainer from './TodosContainer';
+import TodoForm from './TodoForm';
 import './App.css';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
-}
+export default ({ initTodos }) => {
+  const [todos, setTodos] = useState(initTodos);
 
-export default App;
+  const createTodo = (task) => setTodos(prevTodos => [
+    { task, done: false }, ...prevTodos
+  ]);
+
+  const toggleDone = (idx, doneStatus) => setTodos((prevTodos) => {
+    prevTodos[idx].done = doneStatus;
+
+    return [...prevTodos];
+  });
+
+  const deleteTodo = (idx) => setTodos((prevTodos) => {
+    prevTodos.splice(idx, 1);
+
+    return [...prevTodos];
+  });
+  
+  return (
+    <div className="App">
+      <TodoForm onSubmit={createTodo} />
+      <TodosContainer todos={todos} deleteTodo={deleteTodo} toggleDone={toggleDone} />
+    </div>
+  );
+}
