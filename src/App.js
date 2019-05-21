@@ -1,31 +1,29 @@
-import React, { useState } from 'react';
+import React from 'react';
 import TodosContainer from './TodosContainer';
 import TodoForm from './TodoForm';
 import './App.css';
+import { connect } from 'react-redux';
+import { createTodo, deleteTodo, toggleTodo } from './actions';
 
-export default ({ initTodos }) => {
-  const [todos, setTodos] = useState(initTodos);
+const App = ({ createTodo, deleteTodo, toggleTodo, todos }) => {
 
-  const createTodo = (task) => setTodos(prevTodos => [
-    { task, done: false }, ...prevTodos
-  ]);
-
-  const toggleDone = (idx, doneStatus) => setTodos((prevTodos) => {
-    prevTodos[idx].done = doneStatus;
-
-    return [...prevTodos];
-  });
-
-  const deleteTodo = (idx) => setTodos((prevTodos) => {
-    prevTodos.splice(idx, 1);
-
-    return [...prevTodos];
-  });
-  
   return (
     <div className="App">
       <TodoForm onSubmit={createTodo} />
-      <TodosContainer todos={todos} deleteTodo={deleteTodo} toggleDone={toggleDone} />
+      <TodosContainer todos={todos} deleteTodo={deleteTodo} toggleTodo={toggleTodo} />
     </div>
   );
 }
+
+const mapStateToProps = (state) => ({ todos: state.todos });
+
+const mapDispatchToProps = {
+  createTodo,
+  deleteTodo,
+  toggleTodo
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
