@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import TodosContainer from './TodosContainer';
 import TodoForm from './TodoForm';
-import './App.css';
+import '../styles/App.css';
 
 export default ({ initTodos }) => {
   const [todos, setTodos] = useState(initTodos);

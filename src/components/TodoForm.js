@@ -1,5 +1,5 @@
 import React from 'react';
-import './TodoForm.css';
+import '../styles/TodoForm.css';
 
 export default ({ onSubmit }) => {
 

@@ -1,0 +1,6 @@
+type Todo {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  task: String!
+  done: Boolean!
+}
