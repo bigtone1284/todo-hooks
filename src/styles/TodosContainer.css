@@ -3,21 +3,5 @@
   list-style-type: none;
   padding: 0;
   width: 500px;
-}
-
-.todo {
-  display: flex;
-  border: solid 2px #cccccc;
-  flex-direction: column;
-  padding: 10px;
-  margin-bottom: 5px;
-}
-
-.strikethrough {
-  text-decoration: line-through;
-}
-
-.button-container {
-  display: flex;
-  justify-content: space-between;
+  max-width: 100%;
 }

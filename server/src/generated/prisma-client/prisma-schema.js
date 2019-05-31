@@ -68,7 +68,7 @@ type TodoConnection {
 input TodoCreateInput {
   id: ID
   task: String!
-  done: Boolean!
+  done: Boolean
 }
 
 type TodoEdge {

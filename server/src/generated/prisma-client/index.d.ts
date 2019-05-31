@@ -164,7 +164,7 @@ export interface TodoWhereInput {
 export interface TodoCreateInput {
   id?: Maybe<ID_Input>;
   task: String;
-  done: Boolean;
+  done?: Maybe<Boolean>;
 }
 
 export interface TodoUpdateInput {

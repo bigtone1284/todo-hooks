@@ -1,41 +1,43 @@
-import React, { Fragment } from 'react';
+import React from 'react';
+import { Query } from 'react-apollo'
+import gql from 'graphql-tag'
 import '../styles/TodosContainer.css';
+import Todo from './Todo';
+
+export const TODOES_QUERY = gql`
+  {
+    todoes(orderBy: createdAt_DESC) {
+      id
+      createdAt
+      task
+      done
+    }
+  }
+`
 
 export default ({ todos, toggleDone, deleteTodo }) => {
 
-  const renderedTodos = todos.map(({ task, done }, idx) =>
-    <li key={idx} className="todo">
-      <p className={done ? 'strikethrough' : ''}>{task}</p>
-      <div className="button-container">
-        {
-          done ?
-          (
-            <Fragment>
-              <button 
-                className="btn waves-effect blue"
-                onClick={() => { toggleDone(idx, false); }}
-              >
-                Undo
-              </button>
-              <button onClick={() => { deleteTodo(idx); }} className="btn waves-effect red">Delete</button>
-            </Fragment>
-          ) :
-          (
-            <button
-              onClick={() => { toggleDone(idx, true); }}
-              className="btn waves-effect green"
-            >
-              Mark as Done
-            </button>
-          )
-        }
-      </div>
-    </li>
-  );
-
   return (
-    <ul className="TodosContainer">
-      {renderedTodos}
-    </ul>
-  );
+    <Query query={TODOES_QUERY}>
+      {({ loading, error, data }) => {
+
+        if (loading) return <div>Fetching</div>
+        if (error) return <div>Error</div>
+  
+        const todoesToRender = data.todoes;
+        return (
+          <ul className="TodosContainer">
+            {todoesToRender.map(
+              todo => <Todo
+                key={todo.id}
+                id={todo.id}
+                task={todo.task}
+                done={todo.done}
+              />
+            )}
+          </ul>
+        )
+      }}
+    </Query>
+  )
 }

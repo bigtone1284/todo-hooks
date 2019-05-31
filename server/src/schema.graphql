@@ -1,14 +1,22 @@
+scalar DateTime
+
+enum LinkOrderByInput {
+  createdAt_ASC
+  createdAt_DESC
+}
+
 type Query {
   info: String!
-  todoes: [Todo!]!
+  todoes(orderBy: LinkOrderByInput): [Todo!]!
 }
 
 type Mutation {
-  post(task: String!, done: Boolean!): Todo!
+  createTodo(task: String!): Todo!
 }
 
 type Todo {
   id: ID!
+  createdAt: DateTime!
   done: Boolean!
   task: String!
 }
