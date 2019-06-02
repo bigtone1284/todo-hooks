@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../styles/Todo.css';
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import { TODOES_QUERY } from './TodosContainer';
+import LoadingButton from './LoadingButton';
 
 const UPDATE_TODO = gql`
   mutation UpdateTodo($id: ID!, $done: Boolean, $task: String) {
@@ -34,45 +35,46 @@ const removeTodoFromCache = (cache, { data: { deleteTodo }}) => {
 };
 
 export default ({ task, done, id }) => {
+  const [updateLoading, setUpdateLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const isDisabled = deleteLoading || updateLoading;
+
   return (
     <li className="todo">
       <p className={done ? 'strikethrough' : ''}>{task}</p>
       <div className="button-container">
         <Mutation mutation={UPDATE_TODO}>
           { (updateTodo) => (
-            done ? (
-              <button 
-                className="btn waves-effect blue"
-                onClick={() => { 
-                  updateTodo({ variables: { id, done: false } });
-                }}
-              >
-                Undo
-              </button>
-            ) : (
-              <button
-                onClick={() => { 
-                  updateTodo({ variables: { id, done: true } });
-                }}
-                className="btn waves-effect green"
-              >
-                Mark as Done
-              </button>
-            )
+            <LoadingButton
+              disabled={isDisabled}
+              isLoading={updateLoading}
+              color={done ? 'blue' : 'green'}
+              onClick={() => {
+                setUpdateLoading(true);
+                updateTodo({ variables: { id, done: !done } })
+                  .then(() => {
+                    setUpdateLoading(false);
+                  });
+              }}
+              btnText={done ? 'Undo' : 'Mark as Done'}
+            />
           )}
         </Mutation>
         <Mutation mutation={DELETE_TODO} update={removeTodoFromCache}>
           {
             (deleteTodo) => (
               done ? (
-                <button
-                  onClick={() => {
-                    deleteTodo({ variables: { id } });
-                  }}
-                  className="btn waves-effect red"
-                >
-                  Delete
-                </button>
+                <LoadingButton
+                disabled={isDisabled}
+                isLoading={deleteLoading}
+                color="red"
+                btnTxt="Delete"
+                onClick={() => {
+                  setDeleteLoading(true);
+                  deleteTodo({ variables: { id } });
+                }}
+                btnText='Delete'
+              />
             ) : (''))
           }
         </Mutation>
