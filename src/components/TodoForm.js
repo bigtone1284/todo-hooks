@@ -1,8 +1,11 @@
-import React from 'react';
-import '../styles/TodoForm.css';
+import React, { useState } from 'react';
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
+import { makeStyles } from '@material-ui/styles';
+import '../styles/TodoForm.css';
 import { TODOES_QUERY } from './TodosContainer';
+import TextField from '@material-ui/core/TextField';
+import LoadingButton from './LoadingButton';
 
 const POST_MUTATION = gql`
   mutation CreateTodo($task: String!) {
@@ -16,12 +19,19 @@ const POST_MUTATION = gql`
 `
 
 export default () => {
-  let taskInput;
+  const [createTask, setCreateTask] = useState('');
+  const classes = makeStyles({
+    spacer: {
+      marginRight: 10
+    }
+  })();
 
   return (
     <Mutation
       mutation={POST_MUTATION}
       update={(cache, { data: { createTodo }}) => {
+        setCreateTask('');
+
         const { todoes } = cache.readQuery({ query: TODOES_QUERY });
 
         cache.writeQuery({
@@ -37,35 +47,29 @@ export default () => {
               onSubmit={ev => {
                 ev.preventDefault();
 
-                const task = taskInput.value;
-
-                if (task.length) {
-                  createTodo({variables: { task }});
-                  taskInput.value = "";
+                if (createTask.length) {
+                  createTodo({variables: { task: createTask }});
                 }
               }}
 
               className="TodoForm"
             >
-              <input
-                ref={node => {
-                  taskInput = node;
-                }}
-                name="task" 
-                className="form-input spacer"
+              <TextField
+                onChange={({ target: { value } }) => setCreateTask(value)}
                 placeholder="New Todo"
                 type="text"
+                value={createTask}
+                className={classes.spacer}
+                fullWidth
               />
-              <button
-                className="form-input btn waves-effect green"
+              <LoadingButton
+                btnText={"Submit"}
                 type="submit"
-              >
-                Submit
-              </button>
+                color="green"
+              />
             </form>
           );
         }
-
       }
     </Mutation>
   );

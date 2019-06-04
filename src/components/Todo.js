@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import '../styles/Todo.css';
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
+import LaunchIcon from '@material-ui/icons/Launch';
+import IconButton from '@material-ui/core/IconButton';
+import '../styles/Todo.css';
 import { TODOES_QUERY } from './TodosContainer';
 import LoadingButton from './LoadingButton';
 
@@ -41,7 +43,12 @@ export default ({ task, done, id }) => {
 
   return (
     <li className="todo">
-      <p className={done ? 'strikethrough' : ''}>{task}</p>
+      <div className="todo-launch-icon">
+        <IconButton color="primary" size="small">
+          <LaunchIcon fontSize="small" />
+        </IconButton>
+      </div>
+      <p className={'toto-header ' + (done ? 'strikethrough' : '')}>{task}</p>
       <div className="button-container">
         <Mutation mutation={UPDATE_TODO}>
           { (updateTodo) => (

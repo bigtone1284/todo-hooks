@@ -4,6 +4,7 @@
   flex-direction: column;
   padding: 10px;
   margin-bottom: 5px;
+  position: relative;
 }
 
 .strikethrough {
@@ -17,4 +18,16 @@
 
 .flex-btn {
   display: flex;
+}
+
+.toto-header {
+  margin-top: 0;
+}
+
+.todo-launch-icon {
+  color: #888888;
+  display: inline;
+  position: absolute;
+  right: 5px;
+  top: 5px;
 }
