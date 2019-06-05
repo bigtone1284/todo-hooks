@@ -1,19 +1,9 @@
 import React from 'react';
-import { Query } from 'react-apollo'
-import gql from 'graphql-tag'
+import { Query } from 'react-apollo';
+
 import '../styles/TodosContainer.css';
 import Todo from './Todo';
-
-export const TODOES_QUERY = gql`
-  {
-    todoes(orderBy: createdAt_DESC) {
-      id
-      createdAt
-      task
-      done
-    }
-  }
-`
+import { TODOES_QUERY } from '../utils/queries';
 
 export default ({ todos, toggleDone, deleteTodo }) => {
 

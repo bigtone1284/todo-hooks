@@ -1,22 +1,11 @@
 import React, { useState } from 'react';
 import { Mutation } from 'react-apollo'
-import gql from 'graphql-tag'
 import { makeStyles } from '@material-ui/styles';
-import '../styles/TodoForm.css';
 import TextField from '@material-ui/core/TextField';
-import { TODOES_QUERY } from './TodosContainer';
-import LoadingButton from './LoadingButton';
 
-const POST_MUTATION = gql`
-  mutation CreateTodo($task: String!) {
-    createTodo(task: $task) {
-      id
-      createdAt
-      task
-      done
-    }
-  }
-`
+import '../styles/TodoForm.css';
+import { POST_MUTATION, TODOES_QUERY } from '../utils/queries';
+import LoadingButton from './LoadingButton';
 
 export default () => {
   const [createTask, setCreateTask] = useState('');

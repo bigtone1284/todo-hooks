@@ -1,30 +1,12 @@
 import React, { useState } from 'react';
 import { Mutation } from 'react-apollo'
-import gql from 'graphql-tag'
 import LaunchIcon from '@material-ui/icons/Launch';
 import IconButton from '@material-ui/core/IconButton';
+
 import '../styles/Todo.css';
-import { TODOES_QUERY } from './TodosContainer';
+import { DELETE_TODO, TODOES_QUERY, UPDATE_TODO } from '../utils/queries';
 import LoadingButton from './LoadingButton';
 import history from '../utils/history';
-
-const UPDATE_TODO = gql`
-  mutation UpdateTodo($id: ID!, $done: Boolean, $task: String) {
-    updateTodo(id: $id, done: $done, task: $task) {
-      id
-      done
-      task
-    }
-  }
-`;
-
-const DELETE_TODO = gql`
-  mutation DeleteTodo($id: ID!) {
-    deleteTodo(id: $id) {
-      id
-    }
-  }
-`;
 
 const removeTodoFromCache = (cache, { data: { deleteTodo }}) => {
   const { todoes } = cache.readQuery({ query: TODOES_QUERY });
