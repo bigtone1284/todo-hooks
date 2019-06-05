@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
-import TodosContainer from './TodosContainer';
-import TodoForm from './TodoForm';
+import { Route, Router } from 'react-router-dom';
+import history from './history';
+import TodoApp from './TodoApp';
+import TodoModal from './TodoModal';
 import '../styles/App.css';
+
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <TodoForm />
-        <TodosContainer />
-      </div>
+      <Router history={history}>
+        <div className="App">
+          <Route path="/" component={TodoApp} />
+          <Route path="/todos/:id" component={TodoModal} />
+        </div>
+      </Router>
     )
   }
 }

@@ -6,6 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import '../styles/Todo.css';
 import { TODOES_QUERY } from './TodosContainer';
 import LoadingButton from './LoadingButton';
+import history from '../utils/history';
 
 const UPDATE_TODO = gql`
   mutation UpdateTodo($id: ID!, $done: Boolean, $task: String) {
@@ -36,6 +37,8 @@ const removeTodoFromCache = (cache, { data: { deleteTodo }}) => {
   });
 };
 
+
+
 export default ({ task, done, id }) => {
   const [updateLoading, setUpdateLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -44,7 +47,9 @@ export default ({ task, done, id }) => {
   return (
     <li className="todo">
       <div className="todo-launch-icon">
-        <IconButton color="primary" size="small">
+        <IconButton color="primary" size="small" onClick={() => {
+          history.push(`/todos/${id}`)
+        }}>
           <LaunchIcon fontSize="small" />
         </IconButton>
       </div>

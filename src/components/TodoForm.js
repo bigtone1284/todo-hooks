@@ -3,8 +3,8 @@ import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import { makeStyles } from '@material-ui/styles';
 import '../styles/TodoForm.css';
-import { TODOES_QUERY } from './TodosContainer';
 import TextField from '@material-ui/core/TextField';
+import { TODOES_QUERY } from './TodosContainer';
 import LoadingButton from './LoadingButton';
 
 const POST_MUTATION = gql`
