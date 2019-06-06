@@ -1,23 +1,10 @@
 .todo {
-  display: flex;
-  border: solid 2px #cccccc;
-  flex-direction: column;
-  padding: 10px;
   margin-bottom: 5px;
   position: relative;
 }
 
 .strikethrough {
   text-decoration: line-through;
-}
-
-.button-container {
-  display: flex;
-  justify-content: space-between;
-}
-
-.flex-btn {
-  display: flex;
 }
 
 .toto-header {
