@@ -15,11 +15,24 @@ export default () => {
   const todoRef = useRef();
 
   useEffect(() => {
-    fetchAllTodos()
-      .then(todos => {
-        dispatch({ type: ADD_TODOS, payload: { todos } });
+    fetch('http://localhost:3004/users')
+      .then(res => res.json())
+      .then(users => {
+        return Promise.all(users.map(({ id }) => {
+          return fetch(`http://localhost:3004/users/${id}/todos`)
+            .then(res => res.json());
+        }));
       })
-      .catch(err => err);
+      .then((todoArr) => {
+        dispatch({ type: ADD_TODOS, payload: { todos: todoArr.flat() } })
+      });
+
+
+    // fetchAllTodos()
+    //   .then(todos => {
+    //     dispatch({ type: ADD_TODOS, payload: { todos } });
+    //   })
+    //   .catch(err => err);
   }, [todoRef]);
 
   const handleCreateTodo = (task) => {
