@@ -4,33 +4,12 @@ import history from '../utils/history';
 import TodoApp from './TodoApp';
 import TodoModal from './TodoModal';
 import '../styles/App.css';
-
-const todosReducer = (state, { type, payload }) => {
-  switch (type) {
-    case 'ADD_TODOS':
-      const { todos } = payload;
-      return [
-        ...todos.reverse(),
-        ...state
-      ];
-    case 'DELETE_TODO':
-      const { deleteTodoId } = payload;
-
-      return state.filter(({ id }) => id !== deleteTodoId);
-    case 'UPDATE_TODO':
-      const { updatedTodo } = payload;
-
-      return state.map((todo) => {
-        if (todo.id === updatedTodo.id) {
-          return updatedTodo;
-        }
-
-        return todo;
-      });
-    default:
-      throw new Error('please provide action.type');
-  }
-};
+import todosReducer from '../reducers/todosReducer';
+import {
+  ADD_TODOS,
+  DELETE_TODO,
+  UPDATE_TODO
+} from '../actions/todosActions';
 
 const App = () => {
   const [todos, dispatch] = useReducer(todosReducer, []);
@@ -40,7 +19,7 @@ const App = () => {
     fetch('http://localhost:3004/todos')
       .then(res => res.json())
       .then(todos => {
-        dispatch({ type: 'ADD_TODOS', payload: { todos } });
+        dispatch({ type: ADD_TODOS, payload: { todos } });
       })
       .catch(err => err);
   }, [todoRef]);
@@ -59,7 +38,7 @@ const App = () => {
       .then(res => res.json())
       .then(todo => {
         dispatch({
-          type: 'ADD_TODOS',
+          type: ADD_TODOS,
           payload: { todos: [todo] }
         });
 
@@ -75,7 +54,7 @@ const App = () => {
       .then(({ ok }) => {
         if (ok) {
           dispatch({
-            type: 'DELETE_TODO',
+            type: DELETE_TODO,
             payload: {
               deleteTodoId
             }
@@ -96,7 +75,7 @@ const App = () => {
       .then(res => res.json())
       .then(updatedTodo => {
         dispatch({
-          type: 'UPDATE_TODO',
+          type: UPDATE_TODO,
           payload: {
             updatedTodo
           }
