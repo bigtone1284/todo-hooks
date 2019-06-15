@@ -1,31 +1,51 @@
-import React, { Component } from 'react';
+import React, { useEffect, useReducer, useRef } from 'react';
 import { Route, Router } from 'react-router-dom';
 import history from '../utils/history';
 import TodoApp from './TodoApp';
 import TodoModal from './TodoModal';
 import '../styles/App.css';
 
-class App extends Component {
-  constructor() {
-    super();
+const todosReducer = (state, { type, payload }) => {
+  switch (type) {
+    case 'ADD_TODOS':
+      const { todos } = payload;
+      return [
+        ...todos.reverse(),
+        ...state
+      ];
+    case 'DELETE_TODO':
+      const { deleteTodoId } = payload;
 
-    this.state = {
-      todos: []
-    }
+      return state.filter(({ id }) => id !== deleteTodoId);
+    case 'UPDATE_TODO':
+      const { updatedTodo } = payload;
+
+      return state.map((todo) => {
+        if (todo.id === updatedTodo.id) {
+          return updatedTodo;
+        }
+
+        return todo;
+      });
+    default:
+      throw new Error('please provide action.type');
   }
+};
 
-  componentDidMount() {
+const App = () => {
+  const [todos, dispatch] = useReducer(todosReducer, []);
+  const todoRef = useRef();
+
+  useEffect(() => {
     fetch('http://localhost:3004/todos')
       .then(res => res.json())
       .then(todos => {
-        this.setState({
-          todos: todos.reverse()
-        })
+        dispatch({ type: 'ADD_TODOS', payload: { todos } });
       })
       .catch(err => err);
-  }
+  }, [todoRef]);
 
-  createTodo = (task) => {
+  const createTodo = (task) => {
     return fetch('http://localhost:3004/todos', {
       method: 'POST',
       body: JSON.stringify({
@@ -38,11 +58,9 @@ class App extends Component {
     })
       .then(res => res.json())
       .then(todo => {
-        this.setState({
-          todos: [
-            todo,
-            ...this.state.todos
-          ]
+        dispatch({
+          type: 'ADD_TODOS',
+          payload: { todos: [todo] }
         });
 
         return !!todo;
@@ -50,27 +68,24 @@ class App extends Component {
       .catch(err => err);
   }
 
-  deleteTodo = (deleteTodoId) => {
-    const { todos } = this.state;
-
+  const deleteTodo = (deleteTodoId) => {
     return fetch(`http://localhost:3004/todos/${deleteTodoId}`, {
       method: 'DELETE'
     })
       .then(({ ok }) => {
         if (ok) {
-
-
-          this.setState({
-            todos: todos.filter(({ id }) => id !== deleteTodoId)
+          dispatch({
+            type: 'DELETE_TODO',
+            payload: {
+              deleteTodoId
+            }
           });
         }
       })
       .catch(err => err);
   }
 
-  updateTodo = (updateTodoId, updateTodoData) => {
-    const { todos } = this.state;
-
+  const updateTodo = (updateTodoId, updateTodoData) => {
     return fetch(`http://localhost:3004/todos/${updateTodoId}`, {
       method: 'PATCH',
       body: JSON.stringify(updateTodoData),
@@ -80,38 +95,31 @@ class App extends Component {
     })
       .then(res => res.json())
       .then(updatedTodo => {
-        this.setState({
-          todos: todos.map((todo) => {
-            if (todo.id === updatedTodo.id) {
-              return updatedTodo;
-            }
-
-            return todo;
-          })
+        dispatch({
+          type: 'UPDATE_TODO',
+          payload: {
+            updatedTodo
+          }
         });
       })
       .catch(err => err);
   }
 
-  render() {
-    const { todos } = this.state;
-
-    return (
-      <Router history={history}>
-        <div className="App">
-          <Route path="/" render={() => (
-            <TodoApp 
-              createTodo={this.createTodo}
-              deleteTodo={this.deleteTodo}
-              todos={todos}
-              updateTodo={this.updateTodo}
-            />
-          )} />
-          <Route path="/todos/:id" component={TodoModal} />
-        </div>
-      </Router>
-    )
-  }
+  return (
+    <Router history={history}>
+      <div ref={todoRef} className="App">
+        <Route path="/" render={() => (
+          <TodoApp 
+            createTodo={createTodo}
+            deleteTodo={deleteTodo}
+            todos={todos}
+            updateTodo={updateTodo}
+          />
+        )} />
+        <Route path="/todos/:id" component={TodoModal} />
+      </div>
+    </Router>
+  )
 }
 
 export default App
