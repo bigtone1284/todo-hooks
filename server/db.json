@@ -11,11 +11,6 @@
       "id": 6
     },
     {
-      "task": "eat pizza",
-      "done": true,
-      "id": 7
-    },
-    {
       "task": "job hunt",
       "done": false,
       "id": 10
@@ -29,6 +24,16 @@
       "task": "watch black mirror",
       "done": false,
       "id": 15
+    },
+    {
+      "task": "try api function",
+      "done": false,
+      "id": 16
+    },
+    {
+      "task": "try it again",
+      "done": false,
+      "id": 17
     }
   ]
 }

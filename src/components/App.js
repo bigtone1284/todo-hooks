@@ -10,32 +10,22 @@ import {
   DELETE_TODO,
   UPDATE_TODO
 } from '../actions/todosActions';
+import { createTodo, deleteTodo, fetchAllTodos, updateTodo } from '../utils/todoApi';
 
 const App = () => {
   const [todos, dispatch] = useReducer(todosReducer, []);
   const todoRef = useRef();
 
   useEffect(() => {
-    fetch('http://localhost:3004/todos')
-      .then(res => res.json())
+    fetchAllTodos()
       .then(todos => {
         dispatch({ type: ADD_TODOS, payload: { todos } });
       })
       .catch(err => err);
   }, [todoRef]);
 
-  const createTodo = (task) => {
-    return fetch('http://localhost:3004/todos', {
-      method: 'POST',
-      body: JSON.stringify({
-        task,
-        done: false
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(res => res.json())
+  const handleCreateTodo = (task) => {
+    return createTodo(task)
       .then(todo => {
         dispatch({
           type: ADD_TODOS,
@@ -43,36 +33,23 @@ const App = () => {
         });
 
         return !!todo;
-      })
-      .catch(err => err);
-  }
+      });
+  };
 
-  const deleteTodo = (deleteTodoId) => {
-    return fetch(`http://localhost:3004/todos/${deleteTodoId}`, {
-      method: 'DELETE'
-    })
-      .then(({ ok }) => {
-        if (ok) {
+  const handleDeleteTodo = (deleteTodoId) => {
+    return deleteTodo(deleteTodoId)
+      .then(() => {
           dispatch({
             type: DELETE_TODO,
             payload: {
               deleteTodoId
             }
           });
-        }
-      })
-      .catch(err => err);
-  }
+      });
+  };
 
-  const updateTodo = (updateTodoId, updateTodoData) => {
-    return fetch(`http://localhost:3004/todos/${updateTodoId}`, {
-      method: 'PATCH',
-      body: JSON.stringify(updateTodoData),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(res => res.json())
+  const handleUpdateTodo = (updateTodoId, updateTodoData) => {
+    return updateTodo(updateTodoId, updateTodoData)
       .then(updatedTodo => {
         dispatch({
           type: UPDATE_TODO,
@@ -80,19 +57,18 @@ const App = () => {
             updatedTodo
           }
         });
-      })
-      .catch(err => err);
-  }
+      });
+  };
 
   return (
     <Router history={history}>
       <div ref={todoRef} className="App">
         <Route path="/" render={() => (
           <TodoApp 
-            createTodo={createTodo}
-            deleteTodo={deleteTodo}
+            createTodo={handleCreateTodo}
+            deleteTodo={handleDeleteTodo}
             todos={todos}
-            updateTodo={updateTodo}
+            updateTodo={handleUpdateTodo}
           />
         )} />
         <Route path="/todos/:id" component={TodoModal} />
