@@ -8,7 +8,7 @@ import {
   DELETE_TODO,
   UPDATE_TODO
 } from '../actions/todosActions';
-import { createTodo, deleteTodo, fetchAllTodos, updateTodo } from '../utils/todoApi';
+import { createTodo, deleteTodo, updateTodo } from '../utils/todoApi';
 
 export default () => {
   const [todos, dispatch] = useReducer(todosReducer, []);
