@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useReducer, useRef }from 'react';
+import React, { Fragment, useEffect, useReducer }from 'react';
 
 import TodosContainer from './TodosContainer';
 import TodoForm from './TodoForm';
@@ -12,7 +12,6 @@ import { createTodo, deleteTodo, fetchAllTodos, updateTodo } from '../utils/todo
 
 export default () => {
   const [todos, dispatch] = useReducer(todosReducer, []);
-  const todoRef = useRef();
 
   useEffect(() => {
     fetchAllTodos()
@@ -20,7 +19,7 @@ export default () => {
         dispatch({ type: ADD_TODOS, payload: { todos } });
       })
       .catch(err => err);
-  }, [todoRef]);
+  }, []);
 
   const handleCreateTodo = (task) => {
     return createTodo(task)
@@ -59,7 +58,7 @@ export default () => {
   };
   
   return (
-    <Fragment ref={todoRef}>
+    <Fragment>
       <TodoForm createTodo={handleCreateTodo} />
       <TodosContainer
         deleteTodo={handleDeleteTodo}

@@ -8,6 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import '../styles/Todo.css';
 import LoadingButton from './LoadingButton';
+import TaskText from './TaskText';
 import history from '../utils/history';
 
 const useStyles = (makeStyles({
@@ -16,7 +17,6 @@ const useStyles = (makeStyles({
     justifyContent: 'space-between'
   }
 }));
-
 
 export default ({ task, done, id, deleteTodo, updateTodo }) => {
   const [updateLoading, setUpdateLoading] = useState(false);
@@ -34,7 +34,12 @@ export default ({ task, done, id, deleteTodo, updateTodo }) => {
               <LaunchIcon fontSize="small" />
             </IconButton>
           </div>
-          <p className={'toto-header ' + (done ? 'strikethrough' : '')}>{task}</p>
+          <TaskText
+            id={id}
+            done={done}
+            task={task}
+            updateTodo={updateTodo}
+          />
         </CardContent>
         <CardActions className={useStyles().cardActions}>
           <LoadingButton

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/styles';
 import Button from '@material-ui/core/Button';
@@ -16,7 +16,7 @@ const colors = {
   red: red
 };
 
-export default ({ onClick, btnText, color, type, disabled, isLoading }) => {
+export default forwardRef(({onClick, btnText, color, type, disabled, isLoading, size }, ref) => {
   const useStyles = makeStyles({
     root: {
       background: colors[color][500],
@@ -30,13 +30,15 @@ export default ({ onClick, btnText, color, type, disabled, isLoading }) => {
   
   return (
     <Button
+      className={useStyles().root}
       disabled={disabled}
       onClick={onClick}
-      variant="contained"
-      className={useStyles().root}
+      ref={ref}
+      size={size}
       type={type || 'button'}
+      variant="contained"
     >
       {getLoader(isLoading, btnText)}
     </Button>
   )
-}
+})

@@ -5,13 +5,15 @@ import TextField from '@material-ui/core/TextField';
 import '../styles/TodoForm.css';
 import LoadingButton from './LoadingButton';
 
+const useStyles = makeStyles({
+  spacer: {
+    marginRight: 10
+  }
+});
+
 export default ({ createTodo }) => {
   const [createTask, setCreateTask] = useState('');
-  const classes = makeStyles({
-    spacer: {
-      marginRight: 10
-    }
-  })();
+  const classes = useStyles();
 
   return (
     <form
@@ -23,7 +25,6 @@ export default ({ createTodo }) => {
           setCreateTask('');
         }
       }}
-
       className="TodoForm"
     >
       <TextField

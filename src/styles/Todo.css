@@ -3,14 +3,6 @@
   position: relative;
 }
 
-.strikethrough {
-  text-decoration: line-through;
-}
-
-.toto-header {
-  margin-top: 0;
-}
-
 .todo-launch-icon {
   color: #888888;
   display: inline;
