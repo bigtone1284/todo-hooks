@@ -1,7 +1,8 @@
-import React, { Fragment, useEffect, useReducer }from 'react';
+import React, { Fragment, useEffect, useReducer, useState }from 'react';
 
 import TodosContainer from './TodosContainer';
 import TodoForm from './TodoForm';
+import withLoader from './HOC/withLoader';
 import todosReducer from '../reducers/todosReducer';
 import {
   ADD_TODOS,
@@ -12,11 +13,14 @@ import { createTodo, deleteTodo, fetchAllTodos, updateTodo } from '../utils/todo
 
 export default () => {
   const [todos, dispatch] = useReducer(todosReducer, []);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     fetchAllTodos()
       .then(todos => {
         dispatch({ type: ADD_TODOS, payload: { todos } });
+        setIsLoading(false);
       })
       .catch(err => err);
   }, []);
@@ -30,7 +34,8 @@ export default () => {
         });
 
         return !!todo;
-      });
+      })
+      .catch(err => err);
   };
 
   const handleDeleteTodo = (deleteTodoId) => {
@@ -42,7 +47,8 @@ export default () => {
               deleteTodoId
             }
           });
-      });
+      })
+      .catch(err => err);
   };
 
   const handleUpdateTodo = (updateTodoId, updateTodoData) => {
@@ -54,16 +60,20 @@ export default () => {
             updatedTodo
           }
         });
-      });
+      })
+      .catch(err => err);
   };
+
+  const TodosWithLoader = withLoader(TodosContainer);
   
   return (
     <Fragment>
       <TodoForm createTodo={handleCreateTodo} />
-      <TodosContainer
+      <TodosWithLoader
         deleteTodo={handleDeleteTodo}
         updateTodo={handleUpdateTodo}
         todos={todos}
+        isLoading={isLoading}
       />
     </Fragment>
   );
