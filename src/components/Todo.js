@@ -48,8 +48,7 @@ export default ({ task, done, id, deleteTodo, updateTodo }) => {
             color={done ? 'blue' : 'green'}
             onClick={() => {
               setUpdateLoading(true);
-              updateTodo(id, {done: !done})
-                .then(() => setUpdateLoading(false));
+              updateTodo(id, {done: !done});
             }}
             btnText={done ? 'Undo' : 'Mark as Done'}
           />
