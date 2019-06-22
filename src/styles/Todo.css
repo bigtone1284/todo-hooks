@@ -1,0 +1,12 @@
+.todo {
+  margin-bottom: 5px;
+  position: relative;
+}
+
+.todo-launch-icon {
+  color: #888888;
+  display: inline;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
